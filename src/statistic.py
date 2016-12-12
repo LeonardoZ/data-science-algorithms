@@ -5,87 +5,87 @@ import math
 import vector
 
 def mean(x):
-	return sum(x) / len(x)
+    return sum(x) / len(x)
 
 def median(v):
-	n = len(v)
-	sorted_v = sorted(v)
-	midpoint = n // 2
+    n = len(v)
+    sorted_v = sorted(v)
+    midpoint = n // 2
 
-	if n % 2 == 1:
-		return sorted_v[midpoint]
-	else:
-		lo = midpoint - 1
-		hi = midpoint
-		return (sorted_v[lo] + sorted_v[hi]) / 2
+    if n % 2 == 1:
+        return sorted_v[midpoint]
+    else:
+        lo = midpoint - 1
+        hi = midpoint
+        return (sorted_v[lo] + sorted_v[hi]) / 2
 
 def quantile(x, p):
-	p_index = int(p * len(x))
-	return sorted(x)[p_index]
+    p_index = int(p * len(x))
+    return sorted(x)[p_index]
 
 def mode(x):
-	counts = Counter(x)
-	max_count = max(counts.values())
-	return [x_i for x_i, count in counts.iteritems() if count == max_count]
+    counts = Counter(x)
+    max_count = max(counts.values())
+    return [x_i for x_i, count in counts.iteritems() if count == max_count]
 
 def data_range(x):
-	return max(x) - min(x)
+    return max(x) - min(x)
 
 # desloca x ao subtrair a media
 def de_mean(x):
-	x_bar = mean(x)
-	return [x_i - x_bar for x_i in x]
+    x_bar = mean(x)
+    return [x_i - x_bar for x_i in x]
 
 def variance(x):
-	n = len(x)
-	deviantaions = de_mean(x)
-	return sum_of_squares(deviations) / (n - 1)
+    n = len(x)
+    deviantaions = de_mean(x)
+    return sum_of_squares(deviations) / (n - 1)
 
 def standard_deviation(x):
-	return math.sqrt(variance(x))
+    return math.sqrt(variance(x))
 
 def interquartile_range(x):
-	return quantile(x, 0.75) - quantile(x, 0.25)
+    return quantile(x, 0.75) - quantile(x, 0.25)
 
 def covariance(x, y):
-	n = len(x)
-	return dot(de_mean(x), de_mean(y)) / (n - 1)
+    n = len(x)
+    return dot(de_mean(x), de_mean(y)) / (n - 1)
 
 def correlation(x, y):
-	stdev_x = standard_deviation(x)
-	stdev_y = standard_deviation(y)
-	if stdev_x > 0 and stdev_y > 0:
-		return covariance(x, y) / stdev_x / stdev_y
-	else:
-		return 0 # sem amplitute correlação e 0
+    stdev_x = standard_deviation(x)
+    stdev_y = standard_deviation(y)
+    if stdev_x > 0 and stdev_y > 0:
+        return covariance(x, y) / stdev_x / stdev_y
+    else:
+        return 0 # sem amplitute correlação e 0
 
 def uniform_pdf(x):
-	return 1 if x >= 0 and x < 1 else 0
+    return 1 if x >= 0 and x < 1 else 0
 
 def uniform_cdf(x):
-	# retorna a probabilidade de uma variavel aleatoria uniforme ser menor que 1
-	if x < 0: return 0 #a aleatoria uniforme nunca é menor que 0
-	elif x < 1: return x #P(X < 0.4) = 0.4
-	else: return 1 #a aleatoria uniforme é sempre menor que 1
+    # retorna a probabilidade de uma variavel aleatoria uniforme ser menor que 1
+    if x < 0: return 0 #a aleatoria uniforme nunca é menor que 0
+    elif x < 1: return x #P(X < 0.4) = 0.4
+    else: return 1 #a aleatoria uniforme é sempre menor que 1
 
 def normal_pdf(x, mu=0, sigma=0):
-	sqrt_two_pi = math.sqrt(2 * math.pi)
-	return (math.exp(-(x-mu) ** 2 / 2 / sigma ** 2) / (sqrt_two_pi * sigma))
+    sqrt_two_pi = math.sqrt(2 * math.pi)
+    return (math.exp(-(x-mu) ** 2 / 2 / sigma ** 2) / (sqrt_two_pi * sigma))
 
 def normal_cdf(x, mu=0, sigma=1):
-	return (1 + math.erf((x - mu) / math.sqr(2) / sigma)) / 2
+    return (1 + math.erf((x - mu) / math.sqr(2) / sigma)) / 2
 
 def bernoulli_trial(p):
-	return 1 if random.random() < p else 0
+    return 1 if random.random() < p else 0
 
 def binomial(n, p):
-	return sum(bernoulli_trial(p) for _ in range(n))
+    return sum(bernoulli_trial(p) for _ in range(n))
 
 def normal_approximation_to_binomial(n, p):
-	# encontra mi e sigma correspondendo ao Binomial(n, p)
-	mu = n * p
-	sigma = math.sqrt(p * (1 - p) * n)
-	return mu, sigma
+    # encontra mi e sigma correspondendo ao Binomial(n, p)
+    mu = n * p
+    sigma = math.sqrt(p * (1 - p) * n)
+    return mu, sigma
 
 def inverse_normal_cdf(p, mu=0, sigma=1, tolerance=0.00001):
     """find approximate inverse using binary search"""
@@ -116,15 +116,15 @@ normal_probability_below = normal_cdf
 
 # está acima do limite se não estiver abaixo
 def normal_probability_above(lo, mu=0, sigma=1):
-	return 1 - normal_cdf(lo, mu, sigma)
+    return 1 - normal_cdf(lo, mu, sigma)
 
 # está entre se for menos que hi, mas não menos que lo
 def normal_probability_between(lo, hi, mu=0, sigma=1):
-	return normal_cdf(hi, mu, sigma) - normal_cdf(lo, mu, sigma)
+    return normal_cdf(hi, mu, sigma) - normal_cdf(lo, mu, sigma)
 
 # esta fora se nao estiver dentro
 def normal_probability_outside(lo, mu=0, sigma=1):
-	return 1 - normal_probability_between(lo, hi, mu, sigma)
+    return 1 - normal_probability_between(lo, hi, mu, sigma)
 def normal_upper_bound(probability, mu=0, sigma=1):
     """returns the z for which P(Z <= z) = probability"""
     return inverse_normal_cdf(probability, mu, sigma)
